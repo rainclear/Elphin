@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "/home/haoyuz/Workspace/Elphin/bin/elphind.pdb"
   "CMakeFiles/elphind.dir/src/main.cpp.o"
   "CMakeFiles/elphind.dir/src/main.cpp.o.d"
+  "CMakeFiles/elphind.dir/src/reactor.cpp.o"
+  "CMakeFiles/elphind.dir/src/reactor.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

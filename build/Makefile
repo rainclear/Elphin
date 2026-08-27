@@ -153,6 +153,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/reactor.o: src/reactor.cpp.o
+.PHONY : src/reactor.o
+
+# target to build an object file
+src/reactor.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/reactor.cpp.o
+.PHONY : src/reactor.cpp.o
+
+src/reactor.i: src/reactor.cpp.i
+.PHONY : src/reactor.i
+
+# target to preprocess a source file
+src/reactor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/reactor.cpp.i
+.PHONY : src/reactor.cpp.i
+
+src/reactor.s: src/reactor.cpp.s
+.PHONY : src/reactor.s
+
+# target to generate assembly for a file
+src/reactor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/reactor.cpp.s
+.PHONY : src/reactor.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -165,6 +189,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/reactor.o"
+	@echo "... src/reactor.i"
+	@echo "... src/reactor.s"
 .PHONY : help
 
 
