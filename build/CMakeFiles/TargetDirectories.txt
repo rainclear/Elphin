@@ -1,0 +1,3 @@
+/home/haoyuz/Workspace/Elphin/build/CMakeFiles/elphind.dir
+/home/haoyuz/Workspace/Elphin/build/CMakeFiles/edit_cache.dir
+/home/haoyuz/Workspace/Elphin/build/CMakeFiles/rebuild_cache.dir
