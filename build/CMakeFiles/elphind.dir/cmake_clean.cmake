@@ -1,6 +1,10 @@
 file(REMOVE_RECURSE
   "/home/haoyuz/Workspace/Elphin/bin/elphind"
   "/home/haoyuz/Workspace/Elphin/bin/elphind.pdb"
+  "CMakeFiles/elphind.dir/src/buffer.cpp.o"
+  "CMakeFiles/elphind.dir/src/buffer.cpp.o.d"
+  "CMakeFiles/elphind.dir/src/connection.cpp.o"
+  "CMakeFiles/elphind.dir/src/connection.cpp.o.d"
   "CMakeFiles/elphind.dir/src/main.cpp.o"
   "CMakeFiles/elphind.dir/src/main.cpp.o.d"
   "CMakeFiles/elphind.dir/src/reactor.cpp.o"

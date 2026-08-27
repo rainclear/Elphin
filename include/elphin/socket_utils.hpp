@@ -6,7 +6,6 @@
 #include <netinet/tcp.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <iostream>
 
 namespace elphin::net {
 
@@ -23,7 +22,6 @@ inline bool set_tcp_nodelay(int fd) {
 
 inline bool set_reuse_addr(int fd) {
     int opt = 1;
-    // Added 'fd' as the first parameter
     return ::setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == 0;
 }
 

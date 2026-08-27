@@ -69,10 +69,38 @@ include CMakeFiles/elphind.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/elphind.dir/flags.make
 
+CMakeFiles/elphind.dir/src/buffer.cpp.o: CMakeFiles/elphind.dir/flags.make
+CMakeFiles/elphind.dir/src/buffer.cpp.o: /home/haoyuz/Workspace/Elphin/src/buffer.cpp
+CMakeFiles/elphind.dir/src/buffer.cpp.o: CMakeFiles/elphind.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haoyuz/Workspace/Elphin/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/elphind.dir/src/buffer.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/elphind.dir/src/buffer.cpp.o -MF CMakeFiles/elphind.dir/src/buffer.cpp.o.d -o CMakeFiles/elphind.dir/src/buffer.cpp.o -c /home/haoyuz/Workspace/Elphin/src/buffer.cpp
+
+CMakeFiles/elphind.dir/src/buffer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/elphind.dir/src/buffer.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoyuz/Workspace/Elphin/src/buffer.cpp > CMakeFiles/elphind.dir/src/buffer.cpp.i
+
+CMakeFiles/elphind.dir/src/buffer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/elphind.dir/src/buffer.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoyuz/Workspace/Elphin/src/buffer.cpp -o CMakeFiles/elphind.dir/src/buffer.cpp.s
+
+CMakeFiles/elphind.dir/src/connection.cpp.o: CMakeFiles/elphind.dir/flags.make
+CMakeFiles/elphind.dir/src/connection.cpp.o: /home/haoyuz/Workspace/Elphin/src/connection.cpp
+CMakeFiles/elphind.dir/src/connection.cpp.o: CMakeFiles/elphind.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haoyuz/Workspace/Elphin/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/elphind.dir/src/connection.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/elphind.dir/src/connection.cpp.o -MF CMakeFiles/elphind.dir/src/connection.cpp.o.d -o CMakeFiles/elphind.dir/src/connection.cpp.o -c /home/haoyuz/Workspace/Elphin/src/connection.cpp
+
+CMakeFiles/elphind.dir/src/connection.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/elphind.dir/src/connection.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoyuz/Workspace/Elphin/src/connection.cpp > CMakeFiles/elphind.dir/src/connection.cpp.i
+
+CMakeFiles/elphind.dir/src/connection.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/elphind.dir/src/connection.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoyuz/Workspace/Elphin/src/connection.cpp -o CMakeFiles/elphind.dir/src/connection.cpp.s
+
 CMakeFiles/elphind.dir/src/main.cpp.o: CMakeFiles/elphind.dir/flags.make
 CMakeFiles/elphind.dir/src/main.cpp.o: /home/haoyuz/Workspace/Elphin/src/main.cpp
 CMakeFiles/elphind.dir/src/main.cpp.o: CMakeFiles/elphind.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haoyuz/Workspace/Elphin/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/elphind.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haoyuz/Workspace/Elphin/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/elphind.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/elphind.dir/src/main.cpp.o -MF CMakeFiles/elphind.dir/src/main.cpp.o.d -o CMakeFiles/elphind.dir/src/main.cpp.o -c /home/haoyuz/Workspace/Elphin/src/main.cpp
 
 CMakeFiles/elphind.dir/src/main.cpp.i: cmake_force
@@ -86,7 +114,7 @@ CMakeFiles/elphind.dir/src/main.cpp.s: cmake_force
 CMakeFiles/elphind.dir/src/reactor.cpp.o: CMakeFiles/elphind.dir/flags.make
 CMakeFiles/elphind.dir/src/reactor.cpp.o: /home/haoyuz/Workspace/Elphin/src/reactor.cpp
 CMakeFiles/elphind.dir/src/reactor.cpp.o: CMakeFiles/elphind.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haoyuz/Workspace/Elphin/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/elphind.dir/src/reactor.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haoyuz/Workspace/Elphin/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/elphind.dir/src/reactor.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/elphind.dir/src/reactor.cpp.o -MF CMakeFiles/elphind.dir/src/reactor.cpp.o.d -o CMakeFiles/elphind.dir/src/reactor.cpp.o -c /home/haoyuz/Workspace/Elphin/src/reactor.cpp
 
 CMakeFiles/elphind.dir/src/reactor.cpp.i: cmake_force
@@ -99,17 +127,21 @@ CMakeFiles/elphind.dir/src/reactor.cpp.s: cmake_force
 
 # Object files for target elphind
 elphind_OBJECTS = \
+"CMakeFiles/elphind.dir/src/buffer.cpp.o" \
+"CMakeFiles/elphind.dir/src/connection.cpp.o" \
 "CMakeFiles/elphind.dir/src/main.cpp.o" \
 "CMakeFiles/elphind.dir/src/reactor.cpp.o"
 
 # External object files for target elphind
 elphind_EXTERNAL_OBJECTS =
 
+/home/haoyuz/Workspace/Elphin/bin/elphind: CMakeFiles/elphind.dir/src/buffer.cpp.o
+/home/haoyuz/Workspace/Elphin/bin/elphind: CMakeFiles/elphind.dir/src/connection.cpp.o
 /home/haoyuz/Workspace/Elphin/bin/elphind: CMakeFiles/elphind.dir/src/main.cpp.o
 /home/haoyuz/Workspace/Elphin/bin/elphind: CMakeFiles/elphind.dir/src/reactor.cpp.o
 /home/haoyuz/Workspace/Elphin/bin/elphind: CMakeFiles/elphind.dir/build.make
 /home/haoyuz/Workspace/Elphin/bin/elphind: CMakeFiles/elphind.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/haoyuz/Workspace/Elphin/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable /home/haoyuz/Workspace/Elphin/bin/elphind"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/haoyuz/Workspace/Elphin/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable /home/haoyuz/Workspace/Elphin/bin/elphind"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/elphind.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
