@@ -105,6 +105,36 @@ int main() {
                         } else {
                             c->send(elphin::resp::make_error("ERR wrong number of arguments for 'exists' command"));
                         }
+                    } else if (cmd_name == "ZADD") {
+                        if (cmd.args.size() == 4) {
+                            try {
+                                double score = std::stod(cmd.args[2]);
+                                bool added = db.zadd(cmd.args[1], score, cmd.args[3]);
+                                c->send(":" + std::to_string(added ? 1 : 0) + "\r\n");
+                            } catch (...) {
+                                c->send(elphin::resp::make_error("ERR value is not a valid float"));
+                            }
+                        } else {
+                            c->send(elphin::resp::make_error("ERR wrong number of arguments for 'zadd' command"));
+                        }
+                    } else if (cmd_name == "ZRANGEBYSCORE") {
+                        if (cmd.args.size() == 4) {
+                            try {
+                                double min_score = std::stod(cmd.args[2]);
+                                double max_score = std::stod(cmd.args[3]);
+                                auto range = db.zrangebyscore(cmd.args[1], min_score, max_score);
+
+                                std::string resp = "*" + std::to_string(range.size()) + "\r\n";
+                                for (const auto& [member, score] : range) {
+                                    resp += elphin::resp::make_bulk_string(member);
+                                }
+                                c->send(resp);
+                            } catch (...) {
+                                c->send(elphin::resp::make_error("ERR min or max is not a float"));
+                            }
+                        } else {
+                            c->send(elphin::resp::make_error("ERR wrong number of arguments for 'zrangebyscore' command"));
+                        }
                     } else {
                         c->send(elphin::resp::make_error("ERR unknown command '" + cmd.args[0] + "'"));
                     }

@@ -273,6 +273,30 @@ src/resp_parser.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/resp_parser.cpp.s
 .PHONY : src/resp_parser.cpp.s
 
+src/skiplist.o: src/skiplist.cpp.o
+.PHONY : src/skiplist.o
+
+# target to build an object file
+src/skiplist.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/skiplist.cpp.o
+.PHONY : src/skiplist.cpp.o
+
+src/skiplist.i: src/skiplist.cpp.i
+.PHONY : src/skiplist.i
+
+# target to preprocess a source file
+src/skiplist.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/skiplist.cpp.i
+.PHONY : src/skiplist.cpp.i
+
+src/skiplist.s: src/skiplist.cpp.s
+.PHONY : src/skiplist.s
+
+# target to generate assembly for a file
+src/skiplist.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/skiplist.cpp.s
+.PHONY : src/skiplist.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -300,6 +324,9 @@ help:
 	@echo "... src/resp_parser.o"
 	@echo "... src/resp_parser.i"
 	@echo "... src/resp_parser.s"
+	@echo "... src/skiplist.o"
+	@echo "... src/skiplist.i"
+	@echo "... src/skiplist.s"
 .PHONY : help
 
 
