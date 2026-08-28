@@ -177,6 +177,30 @@ src/connection.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/connection.cpp.s
 .PHONY : src/connection.cpp.s
 
+src/db.o: src/db.cpp.o
+.PHONY : src/db.o
+
+# target to build an object file
+src/db.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/db.cpp.o
+.PHONY : src/db.cpp.o
+
+src/db.i: src/db.cpp.i
+.PHONY : src/db.i
+
+# target to preprocess a source file
+src/db.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/db.cpp.i
+.PHONY : src/db.cpp.i
+
+src/db.s: src/db.cpp.s
+.PHONY : src/db.s
+
+# target to generate assembly for a file
+src/db.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/db.cpp.s
+.PHONY : src/db.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -264,6 +288,9 @@ help:
 	@echo "... src/connection.o"
 	@echo "... src/connection.i"
 	@echo "... src/connection.s"
+	@echo "... src/db.o"
+	@echo "... src/db.i"
+	@echo "... src/db.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

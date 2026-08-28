@@ -8,6 +8,7 @@
 #include "elphin/reactor.hpp"
 #include "elphin/connection.hpp"
 #include "elphin/resp_parser.hpp"
+#include "elphin/db.hpp"
 
 int main() {
     std::cout << "Starting " << elphin::PROJECT_NAME << " v" << elphin::VERSION << "...\n";
@@ -23,6 +24,9 @@ int main() {
 
     elphin::net::Reactor reactor;
     std::unordered_map<int, elphin::net::ConnectionPtr> connections;
+    
+    // Instantiate our Key-Value Store
+    elphin::store::Database db;
 
     reactor.add_fd(listen_fd, EPOLLIN, [&](uint32_t) {
         while (true) {
@@ -42,14 +46,13 @@ int main() {
             auto conn = std::make_shared<elphin::net::Connection>(&reactor, client_fd);
             connections[client_fd] = conn;
 
-            // Handle incoming data via RESP Parser
-            conn->set_message_callback([](const elphin::net::ConnectionPtr& c, elphin::net::Buffer* buf) {
+            conn->set_message_callback([&db](const elphin::net::ConnectionPtr& c, elphin::net::Buffer* buf) {
                 while (true) {
                     elphin::resp::Command cmd;
                     auto status = elphin::resp::RespParser::parse_command(buf, cmd);
 
                     if (status == elphin::resp::ParseStatus::Incomplete) {
-                        break; // Wait for more data from socket
+                        break;
                     }
 
                     if (status == elphin::resp::ParseStatus::Error) {
@@ -60,21 +63,47 @@ int main() {
 
                     if (cmd.args.empty()) continue;
 
-                    // Convert command name to uppercase for case-insensitive matching
                     std::string cmd_name = cmd.args[0];
                     std::transform(cmd_name.begin(), cmd_name.end(), cmd_name.begin(), ::toupper);
 
+                    // Command Dispatching
                     if (cmd_name == "PING") {
                         if (cmd.args.size() > 1) {
                             c->send(elphin::resp::make_bulk_string(cmd.args[1]));
                         } else {
                             c->send(elphin::resp::make_simple_string("PONG"));
                         }
-                    } else if (cmd_name == "ECHO") {
-                        if (cmd.args.size() > 1) {
-                            c->send(elphin::resp::make_bulk_string(cmd.args[1]));
+                    } else if (cmd_name == "SET") {
+                        if (cmd.args.size() >= 3) {
+                            db.set(cmd.args[1], cmd.args[2]);
+                            c->send(elphin::resp::make_simple_string("OK"));
                         } else {
-                            c->send(elphin::resp::make_error("ERR wrong number of arguments for 'echo' command"));
+                            c->send(elphin::resp::make_error("ERR wrong number of arguments for 'set' command"));
+                        }
+                    } else if (cmd_name == "GET") {
+                        if (cmd.args.size() == 2) {
+                            auto val = db.get(cmd.args[1]);
+                            if (val.has_value()) {
+                                c->send(elphin::resp::make_bulk_string(val.value()));
+                            } else {
+                                c->send(elphin::resp::make_null_bulk_string());
+                            }
+                        } else {
+                            c->send(elphin::resp::make_error("ERR wrong number of arguments for 'get' command"));
+                        }
+                    } else if (cmd_name == "DEL") {
+                        if (cmd.args.size() == 2) {
+                            bool deleted = db.del(cmd.args[1]);
+                            c->send(":" + std::to_string(deleted ? 1 : 0) + "\r\n");
+                        } else {
+                            c->send(elphin::resp::make_error("ERR wrong number of arguments for 'del' command"));
+                        }
+                    } else if (cmd_name == "EXISTS") {
+                        if (cmd.args.size() == 2) {
+                            bool exists = db.exists(cmd.args[1]);
+                            c->send(":" + std::to_string(exists ? 1 : 0) + "\r\n");
+                        } else {
+                            c->send(elphin::resp::make_error("ERR wrong number of arguments for 'exists' command"));
                         }
                     } else {
                         c->send(elphin::resp::make_error("ERR unknown command '" + cmd.args[0] + "'"));

@@ -242,4 +242,5 @@ CMakeFiles/elphind.dir/src/main.cpp.o: \
  /home/haoyuz/Workspace/Elphin/include/elphin/connection.hpp \
  /home/haoyuz/Workspace/Elphin/include/elphin/buffer.hpp \
  /home/haoyuz/Workspace/Elphin/include/elphin/resp_parser.hpp \
- /usr/include/c++/13/optional
+ /usr/include/c++/13/optional \
+ /home/haoyuz/Workspace/Elphin/include/elphin/db.hpp

@@ -81,12 +81,12 @@ clean: CMakeFiles/elphind.dir/clean
 CMakeFiles/elphind.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/haoyuz/Workspace/Elphin/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target elphind"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/haoyuz/Workspace/Elphin/build/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target elphind"
 .PHONY : CMakeFiles/elphind.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/elphind.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoyuz/Workspace/Elphin/build/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoyuz/Workspace/Elphin/build/CMakeFiles 7
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/elphind.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoyuz/Workspace/Elphin/build/CMakeFiles 0
 .PHONY : CMakeFiles/elphind.dir/rule
