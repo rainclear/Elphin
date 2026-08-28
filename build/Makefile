@@ -225,6 +225,30 @@ src/reactor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/reactor.cpp.s
 .PHONY : src/reactor.cpp.s
 
+src/resp_parser.o: src/resp_parser.cpp.o
+.PHONY : src/resp_parser.o
+
+# target to build an object file
+src/resp_parser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/resp_parser.cpp.o
+.PHONY : src/resp_parser.cpp.o
+
+src/resp_parser.i: src/resp_parser.cpp.i
+.PHONY : src/resp_parser.i
+
+# target to preprocess a source file
+src/resp_parser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/resp_parser.cpp.i
+.PHONY : src/resp_parser.cpp.i
+
+src/resp_parser.s: src/resp_parser.cpp.s
+.PHONY : src/resp_parser.s
+
+# target to generate assembly for a file
+src/resp_parser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/resp_parser.cpp.s
+.PHONY : src/resp_parser.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -246,6 +270,9 @@ help:
 	@echo "... src/reactor.o"
 	@echo "... src/reactor.i"
 	@echo "... src/reactor.s"
+	@echo "... src/resp_parser.o"
+	@echo "... src/resp_parser.i"
+	@echo "... src/resp_parser.s"
 .PHONY : help
 
 

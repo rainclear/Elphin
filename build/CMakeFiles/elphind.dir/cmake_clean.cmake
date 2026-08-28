@@ -9,6 +9,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/elphind.dir/src/main.cpp.o.d"
   "CMakeFiles/elphind.dir/src/reactor.cpp.o"
   "CMakeFiles/elphind.dir/src/reactor.cpp.o.d"
+  "CMakeFiles/elphind.dir/src/resp_parser.cpp.o"
+  "CMakeFiles/elphind.dir/src/resp_parser.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

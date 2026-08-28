@@ -1,11 +1,13 @@
 #include <iostream>
 #include <unordered_map>
 #include <memory>
+#include <algorithm>
 #include <cerrno>
 #include "elphin/common.hpp"
 #include "elphin/socket_utils.hpp"
 #include "elphin/reactor.hpp"
 #include "elphin/connection.hpp"
+#include "elphin/resp_parser.hpp"
 
 int main() {
     std::cout << "Starting " << elphin::PROJECT_NAME << " v" << elphin::VERSION << "...\n";
@@ -40,17 +42,48 @@ int main() {
             auto conn = std::make_shared<elphin::net::Connection>(&reactor, client_fd);
             connections[client_fd] = conn;
 
-            // Register business message processing callback
+            // Handle incoming data via RESP Parser
             conn->set_message_callback([](const elphin::net::ConnectionPtr& c, elphin::net::Buffer* buf) {
-                std::string msg = buf->retrieve_all_to_string();
-                std::cout << "[Client " << c->fd() << " Received]: " << msg;
-                // Reply with standard RESP PONG
-                c->send("+PONG\r\n");
+                while (true) {
+                    elphin::resp::Command cmd;
+                    auto status = elphin::resp::RespParser::parse_command(buf, cmd);
+
+                    if (status == elphin::resp::ParseStatus::Incomplete) {
+                        break; // Wait for more data from socket
+                    }
+
+                    if (status == elphin::resp::ParseStatus::Error) {
+                        c->send(elphin::resp::make_error("ERR Protocol error"));
+                        buf->retrieve_all();
+                        break;
+                    }
+
+                    if (cmd.args.empty()) continue;
+
+                    // Convert command name to uppercase for case-insensitive matching
+                    std::string cmd_name = cmd.args[0];
+                    std::transform(cmd_name.begin(), cmd_name.end(), cmd_name.begin(), ::toupper);
+
+                    if (cmd_name == "PING") {
+                        if (cmd.args.size() > 1) {
+                            c->send(elphin::resp::make_bulk_string(cmd.args[1]));
+                        } else {
+                            c->send(elphin::resp::make_simple_string("PONG"));
+                        }
+                    } else if (cmd_name == "ECHO") {
+                        if (cmd.args.size() > 1) {
+                            c->send(elphin::resp::make_bulk_string(cmd.args[1]));
+                        } else {
+                            c->send(elphin::resp::make_error("ERR wrong number of arguments for 'echo' command"));
+                        }
+                    } else {
+                        c->send(elphin::resp::make_error("ERR unknown command '" + cmd.args[0] + "'"));
+                    }
+                }
             });
 
-            // Register connection teardown cleanup callback
             conn->set_close_callback([&connections](const elphin::net::ConnectionPtr& c) {
-                std::cout << "[Elphin] Connection closed fd: " << c->fd() << "\n";
+                std::cout << "[Elphin] Client disconnected fd: " << c->fd() << "\n";
                 connections.erase(c->fd());
             });
 
