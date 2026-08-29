@@ -135,6 +135,25 @@ int main() {
                         } else {
                             c->send(elphin::resp::make_error("ERR wrong number of arguments for 'zrangebyscore' command"));
                         }
+                    } else if (cmd_name == "EXPIRE") {
+                        if (cmd.args.size() == 3) {
+                            try {
+                                int64_t seconds = std::stoll(cmd.args[2]);
+                                bool set_exp = db.expire(cmd.args[1], seconds);
+                                c->send(":" + std::to_string(set_exp ? 1 : 0) + "\r\n");
+                            } catch (...) {
+                                c->send(elphin::resp::make_error("ERR value is not an integer or out of range"));
+                            }
+                        } else {
+                            c->send(elphin::resp::make_error("ERR wrong number of arguments for 'expire' command"));
+                        }
+                    } else if (cmd_name == "TTL") {
+                        if (cmd.args.size() == 2) {
+                            int64_t remain = db.ttl(cmd.args[1]);
+                            c->send(":" + std::to_string(remain) + "\r\n");
+                        } else {
+                            c->send(elphin::resp::make_error("ERR wrong number of arguments for 'ttl' command"));
+                        }
                     } else {
                         c->send(elphin::resp::make_error("ERR unknown command '" + cmd.args[0] + "'"));
                     }
@@ -152,6 +171,8 @@ int main() {
 
     while (true) {
         reactor.loop_once(100);
+        // Active sampling eviction run
+        db.active_expire_cycle(20);        
     }
 
     ::close(listen_fd);
