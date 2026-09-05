@@ -9,6 +9,7 @@
 #include "elphin/connection.hpp"
 #include "elphin/resp_parser.hpp"
 #include "elphin/db.hpp"
+#include "elphin/thread_pool.hpp"
 
 int main() {
     std::cout << "Starting " << elphin::PROJECT_NAME << " v" << elphin::VERSION << "...\n";
@@ -25,8 +26,9 @@ int main() {
     elphin::net::Reactor reactor;
     std::unordered_map<int, elphin::net::ConnectionPtr> connections;
     
-    // Instantiate our Key-Value Store
+    // Instantiate Key-Value Store & Background Worker ThreadPool
     elphin::store::Database db;
+    elphin::concurrent::ThreadPool pool(2); // 2 background worker threads
 
     reactor.add_fd(listen_fd, EPOLLIN, [&](uint32_t) {
         while (true) {
@@ -171,8 +173,11 @@ int main() {
 
     while (true) {
         reactor.loop_once(100);
-        // Active sampling eviction run
-        db.active_expire_cycle(20);        
+
+        // Asynchronously offload active TTL sampling eviction to the ThreadPool
+        pool.enqueue([&db]() {
+            db.active_expire_cycle(20);
+        });
     }
 
     ::close(listen_fd);

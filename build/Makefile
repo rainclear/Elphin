@@ -297,6 +297,30 @@ src/skiplist.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/skiplist.cpp.s
 .PHONY : src/skiplist.cpp.s
 
+src/thread_pool.o: src/thread_pool.cpp.o
+.PHONY : src/thread_pool.o
+
+# target to build an object file
+src/thread_pool.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/thread_pool.cpp.o
+.PHONY : src/thread_pool.cpp.o
+
+src/thread_pool.i: src/thread_pool.cpp.i
+.PHONY : src/thread_pool.i
+
+# target to preprocess a source file
+src/thread_pool.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/thread_pool.cpp.i
+.PHONY : src/thread_pool.cpp.i
+
+src/thread_pool.s: src/thread_pool.cpp.s
+.PHONY : src/thread_pool.s
+
+# target to generate assembly for a file
+src/thread_pool.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elphind.dir/build.make CMakeFiles/elphind.dir/src/thread_pool.cpp.s
+.PHONY : src/thread_pool.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -327,6 +351,9 @@ help:
 	@echo "... src/skiplist.o"
 	@echo "... src/skiplist.i"
 	@echo "... src/skiplist.s"
+	@echo "... src/thread_pool.o"
+	@echo "... src/thread_pool.i"
+	@echo "... src/thread_pool.s"
 .PHONY : help
 
 

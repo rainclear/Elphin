@@ -19,11 +19,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 # header files directory
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+# Find pthread for std::thread / ThreadPool support
+find_package(Threads REQUIRED)
+
 # source code directory
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 # server executable elphind
 add_executable(elphind ${SOURCES})
+
+# Link pthread library
+target_link_libraries(elphind PRIVATE Threads::Threads)
 
 # print config information
 message(STATUS "Project Name: ${PROJECT_NAME}")

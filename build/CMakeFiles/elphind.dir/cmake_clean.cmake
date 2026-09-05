@@ -15,6 +15,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/elphind.dir/src/resp_parser.cpp.o.d"
   "CMakeFiles/elphind.dir/src/skiplist.cpp.o"
   "CMakeFiles/elphind.dir/src/skiplist.cpp.o.d"
+  "CMakeFiles/elphind.dir/src/thread_pool.cpp.o"
+  "CMakeFiles/elphind.dir/src/thread_pool.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.
