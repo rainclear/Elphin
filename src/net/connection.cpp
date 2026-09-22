@@ -14,9 +14,9 @@ Connection::~Connection() {
     }
 }
 
-void Connection::establish_connection() {
+bool Connection::establish_connection() {
     auto self = shared_from_this();
-    reactor_->add_fd(fd_, EPOLLIN | EPOLLHUP | EPOLLERR, [self](uint32_t events) {
+    return reactor_->add_fd(fd_, EPOLLIN | EPOLLHUP | EPOLLERR, [self](uint32_t events) {
         if (events & (EPOLLERR | EPOLLHUP)) {
             self->handle_close();
             return;
@@ -49,13 +49,11 @@ void Connection::send(std::string_view msg) {
     size_t remaining = msg.size();
     bool fault_error = false;
 
-    // 1. 如果当前 write_buffer_ 为空，尝试直接 write 到内核
     if (write_buffer_.readable_bytes() == 0) {
         nwrote = ::write(fd_, msg.data(), msg.size());
         if (nwrote >= 0) {
             remaining = msg.size() - nwrote;
             if (remaining == 0) {
-                // 全部发送成功，无需注册 EPOLLOUT
                 return;
             }
         } else {
@@ -74,7 +72,6 @@ void Connection::send(std::string_view msg) {
         return;
     }
 
-    // 2. 如果数据没有一次性发完（或 write_buffer_ 原本就有积压），追加到 write_buffer_，并关注 EPOLLOUT 事件
     if (remaining > 0) {
         write_buffer_.append(msg.data() + nwrote, remaining);
         reactor_->modify_fd(fd_, EPOLLIN | EPOLLOUT | EPOLLHUP | EPOLLERR);
@@ -87,7 +84,6 @@ void Connection::handle_write() {
         if (n > 0) {
             write_buffer_.retrieve(n);
             if (write_buffer_.readable_bytes() == 0) {
-                // 写缓冲区已清空，取消关注 EPOLLOUT，避免 busy loop
                 reactor_->modify_fd(fd_, EPOLLIN | EPOLLHUP | EPOLLERR);
             }
         } else {
@@ -104,7 +100,7 @@ void Connection::handle_close() {
     
     int old_fd = fd_;
     reactor_->remove_fd(fd_);
-    fd_ = -1; // 标记已关闭，避免二次 close
+    fd_ = -1; // Mark as closed to avoid double-close
 
     LOG_INFO("Connection closed on fd={}", old_fd);
 

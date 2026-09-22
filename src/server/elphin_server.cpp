@@ -2,6 +2,8 @@
 #include "protocol/resp_builder.hpp"
 #include "common/logger.hpp"
 #include <algorithm>
+#include <charconv>
+#include <system_error>
 
 namespace elphin::server {
 
@@ -37,7 +39,6 @@ void ElphinServer::stop() {
 
 void ElphinServer::on_new_connection(int sockfd) {
     auto conn = std::make_shared<net::Connection>(&reactor_, sockfd);
-    connections_[sockfd] = conn;
 
     conn->set_message_callback([this](const net::ConnectionPtr& c, net::Buffer* buf) {
         on_message(c, buf);
@@ -47,8 +48,12 @@ void ElphinServer::on_new_connection(int sockfd) {
         on_close(c);
     });
 
-    conn->establish_connection();
-    LOG_INFO("Client connected, fd={}", sockfd);
+    if (conn->establish_connection()) {
+        connections_[sockfd] = conn;
+        LOG_INFO("Client connected, fd={}", sockfd);
+    } else {
+        LOG_ERROR("Failed to register epoll event for client fd={}", sockfd);
+    }
 }
 
 void ElphinServer::on_message(const net::ConnectionPtr& conn, net::Buffer* buf) {
@@ -121,42 +126,47 @@ void ElphinServer::dispatch_command(const net::ConnectionPtr& conn, const resp::
         }
     } else if (cmd_name == "ZADD") {
         if (cmd.args.size() == 4) {
-            try {
-                double score = std::stod(cmd.args[2]);
+            double score = 0.0;
+            auto [ptr, ec] = std::from_chars(cmd.args[2].data(), cmd.args[2].data() + cmd.args[2].size(), score);
+            if (ec != std::errc{} || ptr != cmd.args[2].data() + cmd.args[2].size()) {
+                conn->send(resp::RespBuilder::make_error("ERR value is not a valid float"));
+            } else {
                 bool added = db_.zadd(cmd.args[1], score, cmd.args[3]);
                 conn->send(resp::RespBuilder::make_integer(added ? 1 : 0));
-            } catch (...) {
-                conn->send(resp::RespBuilder::make_error("ERR value is not a valid float"));
             }
         } else {
             conn->send(resp::RespBuilder::make_error("ERR wrong number of arguments for 'zadd' command"));
         }
     } else if (cmd_name == "ZRANGEBYSCORE") {
         if (cmd.args.size() == 4) {
-            try {
-                double min_score = std::stod(cmd.args[2]);
-                double max_score = std::stod(cmd.args[3]);
-                auto range = db_.zrangebyscore(cmd.args[1], min_score, max_score);
+            double min_score = 0.0;
+            double max_score = 0.0;
+            auto [ptr1, ec1] = std::from_chars(cmd.args[2].data(), cmd.args[2].data() + cmd.args[2].size(), min_score);
+            auto [ptr2, ec2] = std::from_chars(cmd.args[3].data(), cmd.args[3].data() + cmd.args[3].size(), max_score);
 
+            if (ec1 != std::errc{} || ptr1 != cmd.args[2].data() + cmd.args[2].size() ||
+                ec2 != std::errc{} || ptr2 != cmd.args[3].data() + cmd.args[3].size()) {
+                conn->send(resp::RespBuilder::make_error("ERR min or max is not a float"));
+            } else {
+                auto range = db_.zrangebyscore(cmd.args[1], min_score, max_score);
                 std::string resp = resp::RespBuilder::make_array_header(range.size());
                 for (const auto& [member, score] : range) {
                     resp += resp::RespBuilder::make_bulk_string(member);
                 }
                 conn->send(resp);
-            } catch (...) {
-                conn->send(resp::RespBuilder::make_error("ERR min or max is not a float"));
             }
         } else {
             conn->send(resp::RespBuilder::make_error("ERR wrong number of arguments for 'zrangebyscore' command"));
         }
     } else if (cmd_name == "EXPIRE") {
         if (cmd.args.size() == 3) {
-            try {
-                int64_t seconds = std::stoll(cmd.args[2]);
+            int64_t seconds = 0;
+            auto [ptr, ec] = std::from_chars(cmd.args[2].data(), cmd.args[2].data() + cmd.args[2].size(), seconds);
+            if (ec != std::errc{} || ptr != cmd.args[2].data() + cmd.args[2].size()) {
+                conn->send(resp::RespBuilder::make_error("ERR value is not an integer or out of range"));
+            } else {
                 bool set_exp = db_.expire(cmd.args[1], seconds);
                 conn->send(resp::RespBuilder::make_integer(set_exp ? 1 : 0));
-            } catch (...) {
-                conn->send(resp::RespBuilder::make_error("ERR value is not an integer or out of range"));
             }
         } else {
             conn->send(resp::RespBuilder::make_error("ERR wrong number of arguments for 'expire' command"));
@@ -172,7 +182,6 @@ void ElphinServer::dispatch_command(const net::ConnectionPtr& conn, const resp::
         conn->send(resp::RespBuilder::make_error("ERR unknown command '" + cmd.args[0] + "'"));
     }
 
-    // 在处理完命令后，将 Active Eviction 异步投递给 ThreadPool 执行
     thread_pool_.enqueue([this]() {
         db_.active_expire_cycle(config_.active_expire_sample_size);
     });

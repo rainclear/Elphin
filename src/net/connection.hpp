@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <functional>
+#include <string_view>
 #include "net/buffer.hpp"
 #include "net/reactor.hpp"
 
@@ -23,7 +24,8 @@ public:
     void set_message_callback(MessageCallback cb) { message_callback_ = std::move(cb); }
     void set_close_callback(CloseCallback cb) { close_callback_ = std::move(cb); }
 
-    void establish_connection();
+    // Returns true if successfully registered with the Reactor
+    bool establish_connection();
     void send(std::string_view msg);
     void handle_close();
 
