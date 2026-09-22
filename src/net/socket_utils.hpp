@@ -1,5 +1,5 @@
-#ifndef ELPHIN_SOCKET_UTILS_HPP
-#define ELPHIN_SOCKET_UTILS_HPP
+#ifndef ELPHIN_NET_SOCKET_UTILS_HPP
+#define ELPHIN_NET_SOCKET_UTILS_HPP
 
 #include <fcntl.h>
 #include <netinet/in.h>
@@ -52,4 +52,4 @@ inline int create_server_socket(uint16_t port) {
 
 } // namespace elphin::net
 
-#endif // ELPHIN_SOCKET_UTILS_HPP
+#endif // ELPHIN_NET_SOCKET_UTILS_HPP

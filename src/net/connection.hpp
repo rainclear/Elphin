@@ -1,10 +1,10 @@
-#ifndef ELPHIN_CONNECTION_HPP
-#define ELPHIN_CONNECTION_HPP
+#ifndef ELPHIN_NET_CONNECTION_HPP
+#define ELPHIN_NET_CONNECTION_HPP
 
 #include <memory>
 #include <functional>
-#include "elphin/buffer.hpp"
-#include "elphin/reactor.hpp"
+#include "net/buffer.hpp"
+#include "net/reactor.hpp"
 
 namespace elphin::net {
 
@@ -42,4 +42,4 @@ private:
 
 } // namespace elphin::net
 
-#endif // ELPHIN_CONNECTION_HPP
+#endif // ELPHIN_NET_CONNECTION_HPP

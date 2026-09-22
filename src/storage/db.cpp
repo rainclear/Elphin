@@ -1,7 +1,6 @@
-#include "elphin/db.hpp"
-#include <algorithm>
+#include "storage/db.hpp"
 
-namespace elphin::store {
+namespace elphin::storage {
 
 int64_t Database::current_time_ms() {
     return std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -24,12 +23,12 @@ void Database::check_and_evict_if_expired(const std::string& key) {
 }
 
 void Database::set(const std::string& key, const std::string& value) {
-    expires_.erase(key); // Clear existing TTL on overwrite
+    expires_.erase(key);
     kv_store_[key] = value;
 }
 
 std::optional<std::string> Database::get(const std::string& key) {
-    check_and_evict_if_expired(key); // Lazy eviction
+    check_and_evict_if_expired(key);
     auto it = kv_store_.find(key);
     if (it != kv_store_.end()) {
         return it->second;
@@ -47,7 +46,7 @@ bool Database::del(const std::string& key) {
 }
 
 bool Database::exists(const std::string& key) {
-    check_and_evict_if_expired(key); // Lazy eviction
+    check_and_evict_if_expired(key);
     return kv_store_.find(key) != kv_store_.end() || zset_store_.find(key) != zset_store_.end();
 }
 
@@ -61,17 +60,16 @@ bool Database::expire(const std::string& key, int64_t seconds) {
 
 int64_t Database::ttl(const std::string& key) {
     if (!exists(key)) {
-        return -2; // Key does not exist
+        return -2; // Key 不存在
     }
     auto it = expires_.find(key);
     if (it == expires_.end()) {
-        return -1; // Key exists but has no associated expire
+        return -1; // Key 存在但没有设置过期时间
     }
     int64_t remain_ms = it->second - current_time_ms();
     return remain_ms > 0 ? (remain_ms / 1000) : -2;
 }
 
-// Active eviction loop: Sample random keys from expires_ table and clean expired ones
 int Database::active_expire_cycle(size_t sample_size) {
     if (expires_.empty()) return 0;
 
@@ -94,7 +92,6 @@ int Database::active_expire_cycle(size_t sample_size) {
     return evicted;
 }
 
-// ZSet operations with lazy eviction
 bool Database::zadd(const std::string& key, double score, const std::string& member) {
     check_and_evict_if_expired(key);
     expires_.erase(key);
@@ -133,4 +130,4 @@ std::vector<std::pair<std::string, double>> Database::zrangebyscore(const std::s
     return it->second->skiplist.get_range_by_score(min_score, max_score);
 }
 
-} // namespace elphin::store
+} // namespace elphin::storage

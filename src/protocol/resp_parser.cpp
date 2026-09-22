@@ -1,6 +1,6 @@
-#include "elphin/resp_parser.hpp"
-#include <cstring>
-#include <cstdlib>
+#include "protocol/resp_parser.hpp"
+#include <charconv>
+#include <system_error>
 
 namespace elphin::resp {
 
@@ -14,6 +14,13 @@ static std::optional<std::string_view> read_line(const char* data, size_t len, s
     return std::nullopt;
 }
 
+// 辅助函数：安全将 string_view 解析为整数
+static bool parse_int(std::string_view sv, int& out_val) {
+    if (sv.empty()) return false;
+    auto [ptr, ec] = std::from_chars(sv.data(), sv.data() + sv.size(), out_val);
+    return ec == std::errc{} && ptr == sv.data() + sv.size();
+}
+
 ParseStatus RespParser::parse_command(net::Buffer* buf, Command& cmd) {
     if (buf->readable_bytes() == 0) {
         return ParseStatus::Incomplete;
@@ -22,9 +29,8 @@ ParseStatus RespParser::parse_command(net::Buffer* buf, Command& cmd) {
     const char* data = buf->peek();
     size_t total_readable = buf->readable_bytes();
 
-    // Redis commands are formatted as RESP Arrays starting with '*'
+    // 1. 处理 Inline 命令 (如 plain "PING\r\n")
     if (data[0] != '*') {
-        // Fallback for simple inline commands (e.g. plain "PING\r\n" via netcat)
         size_t consumed = 0;
         auto line = read_line(data, total_readable, consumed);
         if (!line.has_value()) {
@@ -51,15 +57,15 @@ ParseStatus RespParser::parse_command(net::Buffer* buf, Command& cmd) {
         return ParseStatus::Success;
     }
 
-    // Parse RESP Array: *<number-of-elements>\r\n
+    // 2. 解析 RESP Array Header: *<number-of-elements>\r\n
     size_t line_consumed = 0;
     auto line = read_line(data, total_readable, line_consumed);
     if (!line.has_value()) {
         return ParseStatus::Incomplete;
     }
 
-    int num_args = std::atoi(line.value().data() + 1);
-    if (num_args <= 0) {
+    int num_args = 0;
+    if (!parse_int(line.value().substr(1), num_args) || num_args <= 0) {
         buf->retrieve(line_consumed);
         return ParseStatus::Error;
     }
@@ -68,7 +74,7 @@ ParseStatus RespParser::parse_command(net::Buffer* buf, Command& cmd) {
     std::vector<std::string> parsed_args;
     parsed_args.reserve(num_args);
 
-    // Parse each Bulk String element: $<length>\r\n<data>\r\n
+    // 3. 解析各个 Bulk String 元素: $<length>\r\n<data>\r\n
     for (int i = 0; i < num_args; ++i) {
         if (current_offset >= total_readable) {
             return ParseStatus::Incomplete;
@@ -80,23 +86,28 @@ ParseStatus RespParser::parse_command(net::Buffer* buf, Command& cmd) {
             return ParseStatus::Incomplete;
         }
 
-        if (elem_line.value()[0] != '$') {
+        std::string_view sv = elem_line.value();
+        if (sv.empty() || sv[0] != '$') {
             return ParseStatus::Error;
         }
 
-        int str_len = std::atoi(elem_line.value().data() + 1);
+        int str_len = 0;
+        if (!parse_int(sv.substr(1), str_len) || str_len < 0) {
+            return ParseStatus::Error;
+        }
+
         current_offset += elem_line_consumed;
 
-        // Check if full bulk string data + \r\n is available
+        // 检查完整的 Bulk String 载荷 + \r\n 是否已到达
         if (total_readable - current_offset < static_cast<size_t>(str_len + 2)) {
             return ParseStatus::Incomplete;
         }
 
         parsed_args.emplace_back(data + current_offset, str_len);
-        current_offset += str_len + 2; // Move past payload and \r\n
+        current_offset += str_len + 2; // 跳过 payload 与 \r\n
     }
 
-    // Successfully parsed a full command; advance read index in Buffer
+    // 解析成功，消费 Buffer
     buf->retrieve(current_offset);
     cmd.args = std::move(parsed_args);
     return ParseStatus::Success;

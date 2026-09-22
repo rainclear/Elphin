@@ -1,5 +1,5 @@
-#ifndef ELPHIN_BUFFER_HPP
-#define ELPHIN_BUFFER_HPP
+#ifndef ELPHIN_NET_BUFFER_HPP
+#define ELPHIN_NET_BUFFER_HPP
 
 #include <vector>
 #include <string>
@@ -76,4 +76,4 @@ private:
 
 } // namespace elphin::net
 
-#endif // ELPHIN_BUFFER_HPP
+#endif // ELPHIN_NET_BUFFER_HPP

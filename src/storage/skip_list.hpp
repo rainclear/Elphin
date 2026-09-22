@@ -1,13 +1,12 @@
-#ifndef ELPHIN_SKIPLIST_HPP
-#define ELPHIN_SKIPLIST_HPP
+#ifndef ELPHIN_STORAGE_SKIP_LIST_HPP
+#define ELPHIN_STORAGE_SKIP_LIST_HPP
 
 #include <string>
 #include <vector>
-#include <memory>
 #include <random>
-#include <iostream>
+#include <utility>
 
-namespace elphin::store {
+namespace elphin::storage {
 
 constexpr int MAX_LEVEL = 24;
 constexpr double SKIPLIST_P = 0.25;
@@ -24,11 +23,13 @@ struct SkipListNode {
 class SkipList {
 public:
     SkipList();
-    ~SkipList();
+    ~SkipList() noexcept;
 
-    // Disable copying
+    // 禁用拷贝与移动
     SkipList(const SkipList&) = delete;
     SkipList& operator=(const SkipList&) = delete;
+    SkipList(SkipList&&) = delete;
+    SkipList& operator=(SkipList&&) = delete;
 
     void insert(const std::string& member, double score);
     bool erase(const std::string& member, double score);
@@ -38,11 +39,11 @@ private:
     int random_level();
 
     SkipListNode* head_;
-    int level_;
+    int level_{1};
     std::mt19937 rng_;
     std::uniform_real_distribution<double> dist_;
 };
 
-} // namespace elphin::store
+} // namespace elphin::storage
 
-#endif // ELPHIN_SKIPLIST_HPP
+#endif // ELPHIN_STORAGE_SKIP_LIST_HPP

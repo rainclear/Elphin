@@ -1,5 +1,5 @@
-#ifndef ELPHIN_DB_HPP
-#define ELPHIN_DB_HPP
+#ifndef ELPHIN_STORAGE_DB_HPP
+#define ELPHIN_STORAGE_DB_HPP
 
 #include <string>
 #include <unordered_map>
@@ -7,9 +7,9 @@
 #include <vector>
 #include <memory>
 #include <chrono>
-#include "elphin/skiplist.hpp"
+#include "storage/skip_list.hpp"
 
-namespace elphin::store {
+namespace elphin::storage {
 
 struct SortedSet {
     std::unordered_map<std::string, double> dict;
@@ -20,21 +20,21 @@ class Database {
 public:
     Database() = default;
 
-    // String commands
+    // String 操作
     void set(const std::string& key, const std::string& value);
     std::optional<std::string> get(const std::string& key);
     bool del(const std::string& key);
     bool exists(const std::string& key);
 
-    // ZSet commands
+    // ZSet 操作
     bool zadd(const std::string& key, double score, const std::string& member);
     std::vector<std::pair<std::string, double>> zrangebyscore(const std::string& key, double min_score, double max_score);
 
-    // TTL / Expiry commands
+    // TTL / 过期策略
     bool expire(const std::string& key, int64_t seconds);
     int64_t ttl(const std::string& key);
 
-    // Active eviction sampling task
+    // 主动定期过期清理循环
     int active_expire_cycle(size_t sample_size = 20);
 
 private:
@@ -47,6 +47,6 @@ private:
     std::unordered_map<std::string, int64_t> expires_; // key -> expire_at_ms
 };
 
-} // namespace elphin::store
+} // namespace elphin::storage
 
-#endif // ELPHIN_DB_HPP
+#endif // ELPHIN_STORAGE_DB_HPP

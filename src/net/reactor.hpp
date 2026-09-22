@@ -1,5 +1,5 @@
-#ifndef ELPHIN_REACTOR_HPP
-#define ELPHIN_REACTOR_HPP
+#ifndef ELPHIN_NET_REACTOR_HPP
+#define ELPHIN_NET_REACTOR_HPP
 
 #include <sys/epoll.h>
 #include <functional>
@@ -17,13 +17,21 @@ public:
 
     Reactor(const Reactor&) = delete;
     Reactor& operator=(const Reactor&) = delete;
+    Reactor(Reactor&&) = delete;
+    Reactor& operator=(Reactor&&) = delete;
 
     bool add_fd(int fd, uint32_t events, EventCallback callback);
     bool modify_fd(int fd, uint32_t events);
     bool remove_fd(int fd);
 
+    // 运行一次事件循环
     void loop_once(int timeout_ms = -1);
+    
+    // 启动/停止事件循环
+    void run();
     void stop();
+
+    bool is_running() const { return running_; }
 
 private:
     int epoll_fd_{-1};
@@ -34,4 +42,4 @@ private:
 
 } // namespace elphin::net
 
-#endif // ELPHIN_REACTOR_HPP
+#endif // ELPHIN_NET_REACTOR_HPP

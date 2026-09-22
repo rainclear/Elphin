@@ -1,5 +1,5 @@
-#ifndef ELPHIN_THREAD_POOL_HPP
-#define ELPHIN_THREAD_POOL_HPP
+#ifndef ELPHIN_COMMON_THREAD_POOL_HPP
+#define ELPHIN_COMMON_THREAD_POOL_HPP
 
 #include <vector>
 #include <queue>
@@ -14,7 +14,7 @@
 #include <memory>
 #include <stop_token>
 
-namespace elphin::concurrent {
+namespace elphin::common {
 
 class ThreadPool {
 public:
@@ -131,6 +131,6 @@ private:
     bool stopping_{false};
 };
 
-} // namespace elphin::concurrent
+} // namespace elphin::common
 
-#endif // ELPHIN_THREAD_POOL_HPP
+#endif // ELPHIN_COMMON_THREAD_POOL_HPP
